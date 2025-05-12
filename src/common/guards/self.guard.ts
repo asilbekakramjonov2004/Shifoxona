@@ -16,6 +16,8 @@ export class JwtSelfGuard implements CanActivate {
 
     if (user.role === 'superadmin') {
       return true;
+    }else if (user.role === "admin") {
+      return true;
     }
 
     if (user.id !== +req.params.id) {

@@ -150,6 +150,7 @@ export class AuthService {
     const payload = {
       id: patient.id,
       is_active: patient.is_active,
+      role: patient.role,
       email: patient.email,
     };
     const [accessToken, refreshToken] = await Promise.all([
@@ -175,6 +176,7 @@ export class AuthService {
       throw new BadRequestException("Email yoki Password noto'g'ri");
     }
     if (!patient.is_active) {
+      console.log(patient.is_active);
       throw new BadRequestException("Avval Emailni tasdiqlang");
     }
 
@@ -262,6 +264,7 @@ export class AuthService {
     const payload = {
       id: doctor.id,
       is_active: doctor.is_active,
+      role: doctor.role,
       email: doctor.email,
     };
     const [accessToken, refreshToken] = await Promise.all([

@@ -17,6 +17,6 @@ export class CreateLabTestDto {
     @IsNumber()
     doctorId: number
     @IsNotEmpty()
-    @IsDate()
+    @IsString()
     test_date: Date
 }

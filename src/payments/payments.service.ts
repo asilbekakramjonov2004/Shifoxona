@@ -41,8 +41,9 @@ export class PaymentsService {
     return this.paymentModel.findOne({ where: { id }, include: { all: true } });
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return this.paymentModel.update(updatePaymentDto, { where: { id } });
+  async update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    const upd = await this.paymentModel.update(updatePaymentDto, { where: { id }, returning: true});
+    return upd[1][0]
   }
 
   remove(id: number) {

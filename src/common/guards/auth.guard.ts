@@ -12,41 +12,42 @@ import { Observable } from "rxjs";
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
-  canActivate(
-    context: ExecutionContext
-  ): boolean | Promise<boolean> | Observable<boolean> {
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
       throw new UnauthorizedException("Unauthorized");
     }
-    const bearer = authHeader.split(" ")[0];
-    const token = authHeader.split(" ")[1];
+
+    const [bearer, token] = authHeader.split(" ");
 
     if (bearer !== "Bearer" || !token) {
       throw new UnauthorizedException("Unauthorized");
     }
 
-    async function verify(token: string, jwtService: JwtService) {
-      let payload: any;
+    let payload: any;
 
-      try {
-        payload = await jwtService.verify(token, {
-          secret: process.env.ACCESS_TOKEN_KEY,
-        });
-      } catch (error) {
-        throw new BadRequestException(error);
-      }
-      if (!payload) {
-        throw new UnauthorizedException("Unauthorized");
-      }
-      if (!payload.is_active) {
-        throw new ForbiddenException("Ruxsat etilmagan");
-      }
-      req.user = payload;
-      return true;
+    try {
+      payload = await this.jwtService.verify(token, {
+        secret: process.env.ACCESS_TOKEN_KEY,
+      });
+    } catch (error) {
+      throw new BadRequestException(error);
     }
-    return verify(token, this.jwtService);
+
+    if (!payload) {
+      throw new UnauthorizedException("Unauthorized");
+    }
+
+    if (!payload.is_active) {
+      throw new ForbiddenException("Ruxsat etilmagan");
+    }
+
+    req.user = payload;
+
+    return true;
   }
 }
+

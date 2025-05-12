@@ -22,14 +22,15 @@ export class RolesGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const users = request.user;
+    console.log(request.user);
 
-    if (!user) {
-      throw new ForbiddenException('Foydalanuvchi aniqlanmadi');
-    }
+    // if (!users) {
+    //   throw new ForbiddenException('Foydalanuvchi aniqlanmadi');
+    // }
 
-    if (!requiredRoles.includes(user.role)) {
-      throw new ForbiddenException(`Bu amal uchun ruxsat yo‘q: ${user.role}`);
+    if (!requiredRoles.includes(users.role)) {
+      throw new ForbiddenException(`Bu amal uchun ruxsat yo‘q: ${users.role}`);
     }
 
     return true;

@@ -33,8 +33,9 @@ export class PrescriptionsService {
     return this.prescriptionModel.findOne({ where: { id }, include: { all: true } });
   }
 
-  update(id: number, updatePrescriptionDto: UpdatePrescriptionDto) {
-    return this.prescriptionModel.update(updatePrescriptionDto, { where: { id } });
+  async update(id: number, updatePrescriptionDto: UpdatePrescriptionDto) {
+    const upd = await this.prescriptionModel.update(updatePrescriptionDto, { where: { id }, returning: true });
+    return upd[1][0]
   }
 
   remove(id: number) {

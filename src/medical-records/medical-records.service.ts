@@ -27,8 +27,9 @@ export class MedicalRecordsService {
     return this.medicalRecordModel.findOne({ where: { id }, include: { all: true } });
   }
 
-  update(id: number, updateMedicalRecordDto: UpdateMedicalRecordDto) {
-    return this.medicalRecordModel.update(updateMedicalRecordDto, { where: { id } });
+  async update(id: number, updateMedicalRecordDto: UpdateMedicalRecordDto) {
+    const upd = await this.medicalRecordModel.update(updateMedicalRecordDto, { where: { id }, returning: true    });
+    return upd[1][0]
   }
 
   remove(id: number) {

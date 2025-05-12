@@ -26,6 +26,9 @@ import { Insurance } from './insurance/models/insurance.model';
 import { PaymentsModule } from './payments/payments.module';
 import { Payment } from './payments/models/payment.model';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtAuthGuard } from './common/guards/auth.guard';
+
 
 @Module({
   imports: [ConfigModule.forRoot({ envFilePath: ".env", isGlobal: true }),
@@ -41,6 +44,11 @@ import { AuthModule } from './auth/auth.module';
       sync: { alter: true },
       logging: false,
     }),
+    JwtModule.register({
+      secret: process.env.ACCESS_TOKEN_KEY,
+      signOptions: { expiresIn: '1d' },
+    }),
+
     AdminModule,
     PatientsModule,
     DoctorsModule,
@@ -57,5 +65,7 @@ import { AuthModule } from './auth/auth.module';
   ],
   // controllers: [AppController],
   // providers: [AppService],
+  providers: [JwtAuthGuard], // yoki strategy
+  exports: [JwtModule, JwtAuthGuard], // <-- Shart
 })
 export class AppModule {}

@@ -41,9 +41,11 @@ export class AdminController {
     return this.adminService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard, JwtSelfGuard)
+  @Roles("superadmin")
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto) {
-    return this.adminService.update(+id, updateAdminDto);
+  update(@Param('id') id: string, @Body() updateAdminDto: UpdateAdminDto, @Req()req: RequestWithUser) {
+    return this.adminService.update(+id, updateAdminDto, req.user);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)

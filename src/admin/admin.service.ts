@@ -39,7 +39,10 @@ export class AdminService {
     return this.adminModel.findByPk(id);
   }
 
-  async update(id: number, updateAdminDto: UpdateAdminDto): Promise<Admin> {
+  async update(id: number, updateAdminDto: UpdateAdminDto, currentUser: any): Promise<Admin> {
+    if (currentUser.role === 'superadmin' && currentUser.id === id) {
+      throw new ForbiddenException("Superadmin o'zini o'zi o'zgartira olmaydi olmaydi");
+    }
     const updatedAdmin = await this.adminModel.update(updateAdminDto, {where: {id}, returning: true})
     return updateAdminDto[1][0]
   }
